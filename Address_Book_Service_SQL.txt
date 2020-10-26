@@ -1,0 +1,275 @@
+#UC1 ----- create database address_book_service 
+-----------------------------------------------
+ MySQL  localhost:33060+ ssl  payroll_service  SQL > create database Address_Book_Service;
+ MySQL  localhost:33060+ ssl  payroll_service  SQL > show databases;
++----------------------+
+| Database             |
++----------------------+
+| address_book_service |
+| information_schema   |
+| mysql                |
+| payroll_service      |
+| performance_schema   |
+| sakila               |
+| sys                  |
+| world                |
++----------------------+
+ MySQL  localhost:33060+ ssl  payroll_service  SQL > use address_book_service;
+Default schema set to `address_book_service`.
+Fetching table and column names from `address_book_service` for auto-completion... Press ^C to stop.
+
+
+
+
+#UC2 ----- create address_book table
+--------------------------------------------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > CREATE TABLE address_book
+                                                       -> ( first_name VARCHAR(100) NOT NULL,
+                                                       -> last_name VARCHAR(100) NOT NULL,
+                                                       -> address VARCHAR(255) NOT NULL,
+                                                       -> city VARCHAR(100) NOT NULL,
+                                                       -> state VARCHAR(100) NOT NULL,
+                                                       -> zip VARCHAR(50) NOT NULL,
+                                                       -> phone VARCHAR(100) NOT NULL,
+                                                       -> email VARCHAR(100) NOT NULL,
+                                                       -> PRIMARY KEY (first_name)
+                                                       -> );
+
+MySQL  localhost:33060+ ssl  address_book_service  SQL > DESCRIBE address_book;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| first_name | varchar(100) | NO   | PRI | NULL    |       |
+| last_name  | varchar(100) | NO   |     | NULL    |       |
+| address    | varchar(255) | NO   |     | NULL    |       |
+| city       | varchar(100) | NO   |     | NULL    |       |
+| state      | varchar(100) | NO   |     | NULL    |       |
+| zip        | varchar(50)  | NO   |     | NULL    |       |
+| phone      | varchar(100) | NO   |     | NULL    |       |
+| email      | varchar(100) | NO   |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+8 rows in set (0.1339 sec) 
+
+
+
+#UC3 ----- insert contacts into address book
+-------------------------------------------------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > INSERT INTO address_book VALUES 
+							('Robert','Brown','Lincoln Street, LANE-13/20','New York','US','666666','91 9876543210','robert1@gmail.com'),
+						        ('Nicholas','Sparks','South Wall Street','Khartoum','Sudan','777777','91 9999988888','nick3@gmail.com'),
+						        ('Eva','Spencer','Metropolitan Area 14 Code','Manhattan','US','888888','91 9898989898','eva98@gmail.com');
+Query OK, 3 rows affected (0.2556 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_book;
++------------+-----------+----------------------------+-----------+-------+--------+---------------+-------------------+
+| first_name | last_name | address                    | city      | state | zip    | phone         | email             |
++------------+-----------+----------------------------+-----------+-------+--------+---------------+-------------------+
+| Eva        | Spencer   | Metropolitan Area 14 Code  | Manhattan | US    | 888888 | 91 9898989898 | eva98@gmail.com   |
+| Nicholas   | Sparks    | South Wall Street          | Khartoum  | Sudan | 777777 | 91 9999988888 | nick3@gmail.com   |
+| Robert     | Brown     | Lincoln Street, LANE-13/20 | New York  | US    | 666666 | 91 9876543210 | robert1@gmail.com |
++------------+-----------+----------------------------+-----------+-------+--------+---------------+-------------------+
+3 rows in set (0.0021 sec)
+
+
+
+#UC4 ----- edit existing contacts using their name
+---------------------------------------------------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > UPDATE address_book
+                                                       -> SET email = 'nikkk7@gmail.com'
+                                                       -> WHERE first_name = 'Nicholas' AND last_name = 'Sparks';
+Query OK, 1 row affected (0.3935 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_book;
++------------+-----------+----------------------------+-----------+-------+--------+---------------+-------------------+
+| first_name | last_name | address                    | city      | state | zip    | phone         | email             |
++------------+-----------+----------------------------+-----------+-------+--------+---------------+-------------------+
+| Eva        | Spencer   | Metropolitan Area 14 Code  | Manhattan | US    | 888888 | 91 9898989898 | eva98@gmail.com   |
+| Nicholas   | Sparks    | South Wall Street          | Khartoum  | Sudan | 777777 | 91 9999988888 | nikkk7@gmail.com  |
+| Robert     | Brown     | Lincoln Street, LANE-13/20 | New York  | US    | 666666 | 91 9876543210 | robert1@gmail.com |
++------------+-----------+----------------------------+-----------+-------+--------+---------------+-------------------+
+3 rows in set (0.3858 sec)
+
+
+
+#UC5 ------ delete a contact from address book
+-----------------------------------------------------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > DELETE FROM address_book
+                                                       -> WHERE first_name = 'Robert' AND last_name = 'Brown';
+Query OK, 1 row affected (0.1284 sec)
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_book;
++------------+-----------+---------------------------+-----------+-------+--------+---------------+------------------+
+| first_name | last_name | address                   | city      | state | zip    | phone         | email            |
++------------+-----------+---------------------------+-----------+-------+--------+---------------+------------------+
+| Eva        | Spencer   | Metropolitan Area 14 Code | Manhattan | US    | 888888 | 91 9898989898 | eva98@gmail.com  |
+| Nicholas   | Sparks    | South Wall Street         | Khartoum  | Sudan | 777777 | 91 9999988888 | nikkk7@gmail.com |
++------------+-----------+---------------------------+-----------+-------+--------+---------------+------------------+
+2 rows in set (0.0562 sec)
+
+
+
+#UC6 ----- retrieve data from table of a person belonging to a particular city or state
+-------------------------------------------------------------
+
+					#adding few contacts to query by city or state---->>
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > INSERT INTO address_book VALUES 
+							('Arun','Mehta','Civil Road ','Mumbai','Maharashtra','090909','91 9876543211','arun@gmail.com'), 
+							('Robert','Brown','Lincoln Street, LANE-13/20','Amsterdam','New York','787878','91 9898989898','robert1@gmail.com'),
+							('Ritu','Soni','Address 1','Banaras','UP','456789','91 9999911111','ritu2@gmail.com ');
+Query OK, 3 rows affected (0.2099 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_book;
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+
+| first_name | last_name | address                    | city      | state       | zip    | phone         | email             |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+
+| Arun       | Mehta     | Civil Road                 | Mumbai    | Maharashtra | 090909 | 91 9876543211 | arun@gmail.com    |
+| Eva        | Spencer   | Metropolitan Area 14 Code  | Manhattan | US          | 888888 | 91 9898989898 | eva98@gmail.com   |
+| Nicholas   | Sparks    | South Wall Street          | Khartoum  | Sudan       | 777777 | 91 9999988888 | nikkk7@gmail.com  |
+| Ritu       | Soni      | Address 1                  | Banaras   | UP          | 456789 | 91 9999911111 | ritu2@gmail.com   |
+| Robert     | Brown     | Lincoln Street, LANE-13/20 | Amsterdam | New York    | 787878 | 91 9898989898 | robert1@gmail.com |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+
+5 rows in set (0.0023 sec)
+ 
+MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_book
+                                                       -> WHERE city = 'Amsterdam' OR state = 'Maharashtra';
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+
+| first_name | last_name | address                    | city      | state       | zip    | phone         | email             |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+
+| Arun       | Mehta     | Civil Road                 | Mumbai    | Maharashtra | 090909 | 91 9876543211 | arun@gmail.com    |
+| Robert     | Brown     | Lincoln Street, LANE-13/20 | Amsterdam | New York    | 787878 | 91 9898989898 | robert1@gmail.com |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+
+2 rows in set (0.0022 sec)
+
+
+
+#UC7 ----- ability to understand the size of address book by city or state
+-----------------------------------------------------------------
+
+						#Adding few contacts to count the size of address book-----------------------------
+MySQL  localhost:33060+ ssl  address_book_service  SQL > INSERT INTO address_book VALUES 
+							('Person','One','Address 1','Mumbai','State1','987654','91 9879879871','person1@gmail.com'),
+						        ('Alicia','Key','Address 2','city1','New York','343434','91 9823456790','person2@gmail.com');
+Query OK, 2 rows affected (0.2537 sec)
+
+Records: 2  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_book;
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+
+| first_name | last_name | address                    | city      | state       | zip    | phone         | email             |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+
+| Alicia     | Key       | Address 2                  | city1     | New York    | 343434 | 91 9823456790 | person2@gmail.com |
+| Arun       | Mehta     | Civil Road                 | Mumbai    | Maharashtra | 090909 | 91 9876543211 | arun@gmail.com    |
+| Eva        | Spencer   | Metropolitan Area 14 Code  | Manhattan | US          | 888888 | 91 9898989898 | eva98@gmail.com   |
+| Nicholas   | Sparks    | South Wall Street          | Khartoum  | Sudan       | 777777 | 91 9999988888 | nikkk7@gmail.com  |
+| Person     | One       | Address 1                  | Mumbai    | State1      | 987654 | 91 9879879871 | person1@gmail.com |
+| Ritu       | Soni      | Address 1                  | Banaras   | UP          | 456789 | 91 9999911111 | ritu2@gmail.com   |
+| Robert     | Brown     | Lincoln Street, LANE-13/20 | Amsterdam | New York    | 787878 | 91 9898989898 | robert1@gmail.com |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+
+7 rows in set (0.0022 sec)
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT COUNT(State),state FROM address_book GROUP BY state;
++--------------+-------------+
+| COUNT(State) | state       |
++--------------+-------------+
+|            2 | New York    |
+|            1 | Maharashtra |
+|            1 | US          |
+|            1 | Sudan       |
+|            1 | State1      |
+|            1 | UP          |
++--------------+-------------+
+6 rows in set (0.0022 sec)
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT COUNT(city),city FROM address_book GROUP BY city;
++-------------+-----------+
+| COUNT(city) | city      |
++-------------+-----------+
+|           1 | city1     |
+|           2 | Mumbai    |
+|           1 | Manhattan |
+|           1 | Khartoum  |
+|           1 | Banaras   |
+|           1 | Amsterdam |
++-------------+-----------+
+6 rows in set (0.0021 sec)
+
+
+
+#UC8 ------ retrieve data sorted alphabetically from address_book according to city
+------------------------------------------------------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_book
+                                                       -> WHERE city = 'Mumbai'
+                                                       -> ORDER BY first_name;
++------------+-----------+-------------+--------+-------------+--------+---------------+-------------------+
+| first_name | last_name | address     | city   | state       | zip    | phone         | email             |
++------------+-----------+-------------+--------+-------------+--------+---------------+-------------------+
+| Arun       | Mehta     | Civil Road  | Mumbai | Maharashtra | 090909 | 91 9876543211 | arun@gmail.com    |
+| Person     | One       | Address 1   | Mumbai | State1      | 987654 | 91 9879879871 | person1@gmail.com |
++------------+-----------+-------------+--------+-------------+--------+---------------+-------------------+
+2 rows in set (0.0023 sec)
+
+
+
+#UC9 ----- add fields-'name' and 'type' to the address book
+--------------------------------------------------------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > ALTER TABLE address_book ADD name VARCHAR(50);
+Query OK, 0 rows affected (1.6353 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > ALTER TABLE address_book ADD type VARCHAR(50) DEFAULT 'Colleague';
+Query OK, 0 rows affected (1.1218 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_book;
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+------+-----------+
+| first_name | last_name | address                    | city      | state       | zip    | phone         | email             | name | type      |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+------+-----------+
+| Alicia     | Key       | Address 2                  | city1     | New York    | 343434 | 91 9823456790 | person2@gmail.com | NULL | Colleague |
+| Arun       | Mehta     | Civil Road                 | Mumbai    | Maharashtra | 090909 | 91 9876543211 | arun@gmail.com    | NULL | Colleague |
+| Eva        | Spencer   | Metropolitan Area 14 Code  | Manhattan | US          | 888888 | 91 9898989898 | eva98@gmail.com   | NULL | Colleague |
+| Nicholas   | Sparks    | South Wall Street          | Khartoum  | Sudan       | 777777 | 91 9999988888 | nikkk7@gmail.com  | NULL | Colleague |
+| Person     | One       | Address 1                  | Mumbai    | State1      | 987654 | 91 9879879871 | person1@gmail.com | NULL | Colleague |
+| Ritu       | Soni      | Address 1                  | Banaras   | UP          | 456789 | 91 9999911111 | ritu2@gmail.com   | NULL | Colleague |
+| Robert     | Brown     | Lincoln Street, LANE-13/20 | Amsterdam | New York    | 787878 | 91 9898989898 | robert1@gmail.com | NULL | Colleague |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+------+-----------+
+7 rows in set (0.0020 sec)
+
+
+
+#UC10 ----- get no. of contact persons
+--------------------------------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT COUNT(TYPE) FROM address_book;
++-------------+
+| COUNT(TYPE) |
++-------------+
+|           7 |
++-------------+
+1 row in set (0.0017 sec)
+
+
+
+#UC11 ----- add person to both friend and family
+--------------------------------------------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > INSERT INTO address_book VALUES
+                                                       -> ('Rigel','Homes','Address 3','Amsterdam','New York','565656','91 9876767676','rigel@gmail.com','Billy','Friend'),
+							  ('Varun','Sharma','Address 4','Mumbai','Maharashtra','989898','91 9888881234','varun22@gmail.com','Nikhil','Family');
+Query OK, 1 row affected (0.2148 sec)
+MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_book;
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+--------+-----------+
+| first_name | last_name | address                    | city      | state       | zip    | phone         | email             | name   | type      |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+--------+-----------+
+| Alicia     | Key       | Address 2                  | city1     | New York    | 343434 | 91 9823456790 | person2@gmail.com | NULL   | Colleague |
+| Arun       | Mehta     | Civil Road                 | Mumbai    | Maharashtra | 090909 | 91 9876543211 | arun@gmail.com    | NULL   | Colleague |
+| Eva        | Spencer   | Metropolitan Area 14 Code  | Manhattan | US          | 888888 | 91 9898989898 | eva98@gmail.com   | NULL   | Colleague |
+| Nicholas   | Sparks    | South Wall Street          | Khartoum  | Sudan       | 777777 | 91 9999988888 | nikkk7@gmail.com  | NULL   | Colleague |
+| Person     | One       | Address 1                  | Mumbai    | State1      | 987654 | 91 9879879871 | person1@gmail.com | NULL   | Colleague |
+| Rigel      | Homes     | Address 3                  | Amsterdam | New York    | 565656 | 91 9876767676 | rigel@gmail.com   | Billy  | Friend    |
+| Ritu       | Soni      | Address 1                  | Banaras   | UP          | 456789 | 91 9999911111 | ritu2@gmail.com   | NULL   | Colleague |
+| Robert     | Brown     | Lincoln Street, LANE-13/20 | Amsterdam | New York    | 787878 | 91 9898989898 | robert1@gmail.com | NULL   | Colleague |
+| Varun      | Sharma    | Address 4                  | Mumbai    | Maharashtra | 989898 | 91 9888881234 | varun22@gmail.com | Nikhil | Family    |
++------------+-----------+----------------------------+-----------+-------------+--------+---------------+-------------------+--------+-----------+
+9 rows in set (0.0514 sec)
+
+
+------------------------------------------------------------xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--------------------------------------------
