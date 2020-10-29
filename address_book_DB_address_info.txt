@@ -1,0 +1,24 @@
+#UC12---
+
+address info table of address book service DB according to ER diagram
+---------------------------------------------------------------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > CREATE TABLE address_info(
+                                                       -> user_id INT NOT NULL ,
+                                                       -> address VARCHAR(250) NOT NULL,
+                                                       -> state VARCHAR(150) NOT NULL,
+                                                       -> citY VARCHAR(150) NOT NULL,
+                                                       -> zip VARCHAR(50) NOT NULL,
+                                                       -> FOREIGN KEY(user_id) REFERENCES user(user_id)
+                                                       -> );
+Query OK, 0 rows affected (2.6900 sec)
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > describe address_info;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| user_id | int          | NO   | MUL | NULL    |       |
+| address | varchar(250) | NO   |     | NULL    |       |
+| state   | varchar(150) | NO   |     | NULL    |       |
+| citY    | varchar(150) | NO   |     | NULL    |       |
+| zip     | varchar(50)  | NO   |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+5 rows in set (0.1048 sec)

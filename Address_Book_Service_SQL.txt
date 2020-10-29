@@ -272,4 +272,11 @@ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_b
 9 rows in set (0.0514 sec)
 
 
+
+#UC12 ------ draw ER diagram for address book service DB
+--------------------------------------------------------
+
+
+ER diagram and tables according to it added in git and folder.
+
 ------------------------------------------------------------xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--------------------------------------------

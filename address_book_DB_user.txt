@@ -1,0 +1,19 @@
+#UC12
+
+user table of address book service DB according to ER diagram
+---------------------------------------------------------------
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > CREATE TABLE user(
+                                                       -> user_id int NOT NULL PRIMARY KEY,
+                                                       -> first_name VARCHAR(150) NOT NULL,
+                                                       -> last_name VARCHAR(150) NOT NULL);
+Query OK, 0 rows affected (1.2828 sec)
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > DESCRIBE user;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| user_id    | int          | NO   | PRI | NULL    |       |
+| first_name | varchar(150) | NO   |     | NULL    |       |
+| last_name  | varchar(150) | NO   |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+3 rows in set (0.1257 sec)
