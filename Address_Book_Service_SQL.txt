@@ -279,4 +279,184 @@ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_b
 
 ER diagram and tables according to it added in git and folder.
 
+
+
+
+#UC13 ------ insert values and retrieve the data according to queries
+---------------------------------------------------------------------
+
+inserting values
+----------------
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > INSERT INTO user VALUES
+                                                       -> (1,'Bill','Clark'),
+                                                       -> (2,'Terissa','Brown'),
+                                                       -> (3,'Charlie','Warner');
+Query OK, 3 rows affected (0.3012 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM user;
++---------+------------+-----------+
+| user_id | first_name | last_name |
++---------+------------+-----------+
+|       1 | Bill       | Clark     |
+|       2 | Terissa    | Brown     |
+|       3 | Charlie    | Warner    |
++---------+------------+-----------+
+3 rows in set (0.0024 sec)
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > INSERT INTO address_info VALUES
+                                                       -> (1,'Variable1','New York','Amsterdam','121212'),
+                                                       -> (2,'Variable2','Maharashtra','Mumbai','232323'),
+                                                       -> (3,'Variable3','New York','Amsterdam','343434');
+Query OK, 3 rows affected (0.2023 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM address_info;
++---------+-----------+-------------+-----------+--------+
+| user_id | address   | state       | citY      | zip    |
++---------+-----------+-------------+-----------+--------+
+|       1 | Variable1 | New York    | Amsterdam | 121212 |
+|       2 | Variable2 | Maharashtra | Mumbai    | 232323 |
+|       3 | Variable3 | New York    | Amsterdam | 343434 |
++---------+-----------+-------------+-----------+--------+
+3 rows in set (0.0024 sec)
+
+ INSERT INTO contact_info VALUES
+                                                       -> (1,'91 9898989898','bill@gmail.com'),
+                                                       -> (2,'91 9797979797','teriS@gmail.com'),
+                                                       -> (3,'91 9696969696','ch@gmail.com');
+Query OK, 3 rows affected (0.2134 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM contact_info;
++---------+---------------+-----------------+
+| user_id | phone_no      | email           |
++---------+---------------+-----------------+
+|       1 | 91 9898989898 | bill@gmail.com  |
+|       2 | 91 9797979797 | teriS@gmail.com |
+|       3 | 91 9696969696 | ch@gmail.com    |
++---------+---------------+-----------------+
+3 rows in set (0.0034 sec)
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > INSERT INTO contact_type VALUES
+                                                       -> (1,'Mark',19,'FRIEND'),
+                                                       -> (2,'Eva',28,'FAMILY'),
+                                                       -> (3,'Harry',37,'COLLEAGUE');
+Query OK, 3 rows affected (0.2394 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM contact_type;
++---------+--------------+---------+--------------+
+| user_id | contact_name | type_id | contact_type |
++---------+--------------+---------+--------------+
+|       1 | Mark         |      19 | FRIEND       |
+|       2 | Eva          |      28 | FAMILY       |
+|       3 | Harry        |      37 | COLLEAGUE    |
++---------+--------------+---------+--------------+
+3 rows in set (0.0524 sec)
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > INSERT INTO link_type VALUES
+                                                       -> (1,19),
+                                                       -> (2,28),
+                                                       -> (3,37);
+Query OK, 3 rows affected (0.2079 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT * FROM link_type;
++---------+---------+
+| user_id | type_id |
++---------+---------+
+|       1 |      19 |
+|       2 |      28 |
+|       3 |      37 |
++---------+---------+
+3 rows in set (0.0020 sec)
+
+
+
+----- Queries-------(UC6, UC7,UC8 AND UC10)
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT u.first_name,u.last_name,a.state
+                                                       -> FROM user u LEFT JOIN address_info a ON u.user_id = a.user_id
+                                                       -> WHERE a.state = 'New York';
++------------+-----------+----------+
+| first_name | last_name | state    |                                                                                     #retrieve all users in a particular state
++------------+-----------+----------+
+| Bill       | Clark     | New York |                                                                                 
+| Charlie    | Warner    | New York |
++------------+-----------+----------+
+2 rows in set (0.0615 sec)
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT u.first_name, u.last_name,a.city
+                                                       -> FROM user u LEFT JOIN address_info a ON u.user_id = a.user_id
+                                                       -> WHERE a.city = 'Mumbai';
++------------+-----------+--------+
+| first_name | last_name | city   |											 #retrieve all users in a particular city											
++------------+-----------+--------+
+| Terissa    | Brown     | Mumbai |
++------------+-----------+--------+
+1 row in set (0.0027 sec)
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT city,COUNT(*) FROM address_info GROUP BY city;
++-----------+----------+
+| city      | COUNT(*) |
++-----------+----------+
+| Amsterdam |        2 |												#retrieve count of total users in a particular city  					
+| Mumbai    |        1 |
++-----------+----------+
+2 rows in set (0.0022 sec)
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT COUNT(c.user_id) AS number_of_contacts ,c.contact_type,u.first_name 
+						       -> FROM user u JOIN contact_type c JOIN link_type l
+   						       -> WHERE u.user_id = c.user_id AND c.user_id = l.user_id
+						       -> GROUP BY (c.contact_type);
++--------------------+--------------+------------+
+| number_of_contacts | contact_type | first_name |
++--------------------+--------------+------------+
+|                  1 | FRIEND       | Bill       |									#retrieve total no. of type of contacts of a user
+|                  1 | FAMILY       | Terissa    |
+|                  1 | COLLEAGUE    | Charlie    |
++--------------------+--------------+------------+
+3 rows in set (0.0035 sec)
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT COUNT(DISTINCT(city)) FROM address_info;
++-----------------------+
+| COUNT(DISTINCT(city)) |
++-----------------------+												#retrieve total no. of different cities for the size of address book						
+|                     2 |
++-----------------------+
+1 row in set (0.0557 sec)
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT COUNT(DISTINCT(state)) FROM address_info;
++------------------------+
+| COUNT(DISTINCT(state)) |												#retrieve total no. of different states for the size of address book
++------------------------+
+|                      2 |
++------------------------+
+
+1 row in set (0.0028 sec)
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT u.first_name , u.last_name , a.city
+                                                       -> FROM user u LEFT JOIN address_info a
+                                                       -> ON u.user_id = a.user_id
+                                                       -> WHERE city = 'Amsterdam'
+                                                       -> ORDER BY a.city;
++------------+-----------+-----------+
+| first_name | last_name | city      |
++------------+-----------+-----------+
+| Bill       | Clark     | Amsterdam |											#retrieve all users sorted alphabetically in a particula city
+| Charlie    | Warner    | Amsterdam |
++------------+-----------+-----------+
+2 rows in set (0.0026 sec)
+
+
+ MySQL  localhost:33060+ ssl  address_book_service  SQL > SELECT contact_type,COUNT(contact_type) FROM contact_type GROUP BY contact_type;
++--------------+---------------------+
+| contact_type | COUNT(contact_type) |
++--------------+---------------------+
+| FRIEND       |                   1 |											#retrieve total type of contacts in an address book
+| FAMILY       |                   1 |
+| COLLEAGUE    |                   1 |
++--------------+---------------------+
+3 rows in set (0.0021 sec)
+
+
+
 ------------------------------------------------------------xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--------------------------------------------
