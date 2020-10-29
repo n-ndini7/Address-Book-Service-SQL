@@ -8,17 +8,20 @@ contact type table for address book service DB according to ER diagram
                                                        -> user_id INT NOT NULL,
                                                        -> contact_name VARCHAR(200),
                                                        -> contact_type VARCHAR(100) ,
-                                                       -> PRIMARY KEY(contact_type),
+						       -> type_id INT DEFAULT NULL,
+                                                       -> PRIMARY KEY(type_id),
 						       -> FOREIGN KEY (user_id) REFERENCES user(user_id)
                                                        -> );
 Query OK, 0 rows affected (1.5665 sec)
- MySQL  localhost:33060+ ssl  address_book_service  SQL > DESCRIBE contact_type;
+  MySQL  localhost:33060+ ssl  address_book_service  SQL > DESCRIBE contact_type;
 +--------------+--------------+------+-----+---------+-------+
 | Field        | Type         | Null | Key | Default | Extra |
 +--------------+--------------+------+-----+---------+-------+
 | user_id      | int          | NO   | MUL | NULL    |       |
 | contact_name | varchar(200) | YES  |     | NULL    |       |
-| contact_type | varchar(100) | NO   | PRI | NULL    |       |
+| type_id      | int          | NO   | PRI | NULL    |       |
+| contact_type | varchar(100) | YES  |     | NULL    |       |
 +--------------+--------------+------+-----+---------+-------+
-3 rows in set (0.3466 sec)
+4 rows in set (0.0847 sec)
+
 
